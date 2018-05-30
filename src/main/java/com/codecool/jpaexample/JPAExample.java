@@ -49,7 +49,7 @@ public class JPAExample {
 
     public static void main(String[] args) {
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpaexamplePU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpapractice");
         EntityManager em = emf.createEntityManager();
 
         populateDb(em);

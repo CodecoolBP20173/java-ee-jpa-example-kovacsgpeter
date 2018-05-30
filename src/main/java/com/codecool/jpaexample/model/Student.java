@@ -1,6 +1,8 @@
 package com.codecool.jpaexample.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,15 +17,23 @@ public class Student {
 
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @Transient
     private long age;
 
-    @OneToOne
+    @ManyToOne
+    private Klass klass;
+
+    @OneToOne(mappedBy = "student")
     private Address address;
+
+    @ElementCollection
+    private List<String> phoneNumbers;
 
     public Student() {
     }
@@ -39,6 +49,13 @@ public class Student {
     public Student(String name, String email, Date dateOfBirth, Address address) {
         this(name, email, dateOfBirth);
         this.address = address;
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public Student(String name, String email, Date dateOfBirth, Address address, List<String> phoneNumbers, Klass klass) {
+        this(name, email, dateOfBirth, address);
+        this.phoneNumbers = phoneNumbers;
+        this.klass = klass;
     }
 
     public long getId() {
@@ -74,7 +91,10 @@ public class Student {
     }
 
     public long getAge() {
-        return age;
+        Date now = new Date();
+        long timeBetween = now.getTime() - getDateOfBirth().getTime();
+        double yearsBetween = timeBetween / 3.15576e+10;
+        return (int) Math.floor(yearsBetween);
     }
 
     public Address getAddress() {
@@ -83,6 +103,10 @@ public class Student {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
     @Override
